@@ -78,7 +78,7 @@ export class ContratosListComponent implements OnInit {
     });
   }
 
-  eliminar(id: number) {
+  eliminar(id: string) {
     if (confirm('¿Está seguro de eliminar este contrato?')) {
       this.dataService.delete('contratos', id).subscribe(() => {
         this.cargarContratos();

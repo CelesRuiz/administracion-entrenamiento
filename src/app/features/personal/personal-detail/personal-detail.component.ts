@@ -35,7 +35,7 @@ export class PersonalDetailComponent implements OnInit {
   contratistaNombre: string = 'Cargando...';
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id =(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.dataService.getById<Personal>('personal', id).subscribe(data => {
         this.personal = data;

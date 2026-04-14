@@ -23,15 +23,15 @@ import { DataService } from '../../../core/services/data.service';
           <input type="text" formControlName="cuit" class="form-control" placeholder="XX-XXXXXXXX-X">
         </div>
 
-        <fieldset formGroupName="contacto" style="border: 1px solid #e5e7eb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <fieldset style="border: 1px solid #e5e7eb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
           <legend style="padding: 0 0.5rem; color: #6b7280; font-size: 0.9rem;">Datos de Contacto</legend>
           <div class="form-group">
             <label>Nombre del Contacto</label>
-            <input type="text" formControlName="nombre" class="form-control">
+            <input type="text" formControlName="contactoNombre" class="form-control">
           </div>
           <div class="form-group">
             <label>Teléfono</label>
-            <input type="text" formControlName="telefono" class="form-control">
+            <input type="text" formControlName="contactoTelefono" class="form-control">
           </div>
         </fieldset>
 
@@ -51,21 +51,20 @@ export class ContratistasFormComponent implements OnInit {
 
   form: FormGroup;
   isEdit = false;
-  id: number | null = null;
+  id: string | null = null;
 
   constructor() {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       cuit: ['', Validators.required],
-      contacto: this.fb.group({
-        nombre: ['', Validators.required],
-        telefono: ['', Validators.required]
-      })
+      contactoNombre:  ['', Validators.required],
+      contactoTelefono: ['', Validators.required]
+      
     });
   }
 
   ngOnInit() {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.id = (this.route.snapshot.paramMap.get('id'));
     if (this.id) {
       this.isEdit = true;
       this.dataService.getById<any>('contratistas', this.id).subscribe(data => {
@@ -84,8 +83,10 @@ export class ContratistasFormComponent implements OnInit {
       // BUG EDUCATIVO: Retornamos a la lista, pero NO nos suscribimos.
       // La creación NO se realizará en el servicio!!
       // Estudiante deberá notar que falta el .subscribe()
-      this.dataService.create('contratistas', this.form.value);
-      this.router.navigate(['/contratistas']);
+      this.dataService.create('contratistas', this.form.value).subscribe(()=>{
+        this.router.navigate(['/contratistas']);
+      });
+      
     }
   }
 }

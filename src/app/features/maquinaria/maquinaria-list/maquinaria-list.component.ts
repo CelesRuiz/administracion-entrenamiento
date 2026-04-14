@@ -2,7 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DataService } from '../../../core/services/data.service';
-import { Maquinaria, Contratista } from '../../../core/models/entidades';
+import { Maquinaria} from '../../../core/models/entidades';
+import { ItemBase } from '../../../shared/models/item-base';
 
 @Component({
   selector: 'app-maquinaria-list',
@@ -54,7 +55,7 @@ export class MaquinariaListComponent implements OnInit {
   private dataService = inject(DataService);
   
   maquinarias: Maquinaria[] = [];
-  contratistas: Contratista[] = [];
+  contratistas: ItemBase[] = [];
 
   ngOnInit() {
     this.cargarDatos();
@@ -62,15 +63,15 @@ export class MaquinariaListComponent implements OnInit {
 
   cargarDatos() {
     this.dataService.getAll<Maquinaria>('maquinaria').subscribe(data => this.maquinarias = data);
-    this.dataService.getAll<Contratista>('contratistas').subscribe(data => this.contratistas = data);
+    this.dataService.getAll<ItemBase>('contratistas').subscribe(data => this.contratistas = data);
   }
 
-  getContratistaNombre(id: number): string {
-    const c = this.contratistas.find(x => x.id === id);
+  getContratistaNombre(id: string): string {
+    const c = this.contratistas.find(x => x.id == id);
     return c ? c.nombre : 'Desconocido';
   }
 
-  eliminar(id: number) {
+  eliminar(id: string) {
     if (confirm('Eliminar maquinaria?')) {
       this.dataService.delete('maquinaria', id).subscribe(() => this.cargarDatos());
     }

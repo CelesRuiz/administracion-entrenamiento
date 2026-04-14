@@ -1,81 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, tap, catchError, map } from 'rxjs';
-import { Contrato, Contratista, Personal, Transporte, Maquinaria } from '../models/entidades';
+import { Observable, of, delay, catchError, map } from 'rxjs';
+import { Database } from '../models/entidades';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  private db: any = null;
+  private readonly baseUrl = 'https://69c5b8178a5b6e2dec2cc3e8.mockapi.io/api/v1';
 
   constructor(private http: HttpClient) { }
 
-  private initDb(): Observable<any> {
-    if (this.db) return of(this.db);
-    return this.http.get('/assets/db.json').pipe(
-      tap(data => this.db = data),
-      delay(500)
+  getAll<T>(entity: keyof Database): Observable<T[]> {
+    return this.http.get<T[]>(`${this.baseUrl}/${entity}`).pipe(
+      catchError(err => {
+        console.error('Error cargando datos', err);
+        return of([] as T[]);
+      }),
+      delay(800)
     );
   }
 
-  // Generic GET
-  getAll<T>(entity: string): Observable<T[]> {
-    return this.initDb().pipe(
-      map(db => db[entity] as T[]),
-
-      map((items: any[]) => items.map(i => {
-        if (entity === 'maquinaria') {
-          return {
-            ...i,
-            modelo: i.modelo + ' (Bug: ' + i.horasUso + 'h)',
-          }
-        }
-        return i;
-      })),
-      delay(800) // Simular red
-    );
-  }
-
-  getById<T>(entity: string, id: number): Observable<T> {
-    return this.initDb().pipe(
-      map(db => db[entity].find((item: any) => item.id == id) as T),
+  getById<T>(entity: keyof Database, id: number | string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${entity}/${id}`).pipe(
+      catchError(err => {
+        console.error('Error buscando item:', err);
+        return of(undefined as T);
+      }),
       delay(300)
     );
   }
 
-  // Create
-  create<T>(entity: string, item: T): Observable<T> {
-    return this.initDb().pipe(
-      tap(db => {
-
-        const newItem = { ...item, id: new Date().getTime() };
-        db[entity].push(newItem);
-
+  create<T>(entity: keyof Database, item: T): Observable<T> {
+    return this.http.post<T>(`${this.baseUrl}/${entity}`, item).pipe(
+      catchError(err => {
+        console.error('Error creando item:', err);
+        return of(item);
       }),
       delay(500)
     );
   }
 
-  // Update
-  update<T>(entity: string, id: number, item: any): Observable<T> {
-    return this.initDb().pipe(
-      tap(db => {
-        const index = db[entity].findIndex((i: any) => i.id == id);
-        if (index !== -1) {
-          db[entity][index] = { ...item, id };
-        }
+  update<T>(entity: keyof Database, id: number | string, item: T): Observable<T> {
+    return this.http.put<T>(`${this.baseUrl}/${entity}/${id}`, item).pipe(
+      catchError(err => {
+        console.error('Error actualizando item:', err);
+        return of(item);
       }),
       delay(500)
     );
   }
 
-  // Delete
-  delete(entity: string, id: number): Observable<boolean> {
-    return this.initDb().pipe(
-      tap(db => {
-        db[entity] = db[entity].filter((i: any) => i.id != id);
+  delete(entity: keyof Database, id: number | string): Observable<boolean> {
+    return this.http.delete(`${this.baseUrl}/${entity}/${id}`).pipe(
+      catchError(err => {
+        console.error('Error eliminando item:', err);
+        return of(null);
       }),
       map(() => true),
       delay(500)

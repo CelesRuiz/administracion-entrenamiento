@@ -32,7 +32,7 @@ import { Contratista } from '../../../core/models/entidades';
               <td>{{ c.nombre }}</td>
               <td>{{ c.cuit }}</td>
               <!-- BUG EDUCATIVO: 'c.contacto' es un objeto {nombre, telefono}. Se mostrará [object Object] -->
-              <td>{{ c.contacto }}</td>
+              <td>{{ c.contactoNombre }} {{c.contactoTelefono}} </td>
               <td class="actions-cell">
                 <a [routerLink]="['/contratistas/detalle', c.id]" class="btn btn-info">Ver</a>
                 <a [routerLink]="['/contratistas/editar', c.id]" class="btn btn-secondary">Editar</a>
@@ -62,7 +62,7 @@ export class ContratistasListComponent implements OnInit {
     });
   }
 
-  eliminar(id: number) {
+  eliminar(id: string) {
     if (confirm('Eliminar contratista?')) {
       this.dataService.delete('contratistas', id).subscribe(() => this.cargar());
     }

@@ -34,7 +34,7 @@ export class ContratosDetailComponent implements OnInit {
   contrato?: Contrato;
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = (this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.dataService.getById<Contrato>('contratos', id).subscribe(data => {
         this.contrato = data;

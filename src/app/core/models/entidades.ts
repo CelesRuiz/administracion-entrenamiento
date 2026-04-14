@@ -1,5 +1,5 @@
 export interface Contrato {
-  id: number;
+  id: string;
   codigo: string;
   descripcion: string;
   fechaInicio: string;
@@ -7,35 +7,41 @@ export interface Contrato {
 }
 
 export interface Contratista {
-  id: number;
+  id: string;
   nombre: string;
   cuit: string;
-  contacto: {
-    nombre: string;
-    telefono: string;
-  };
+  contactoNombre: string;
+  contactoTelefono: string;
 }
 
 export interface Personal {
-  id: number;
-  contratistaId: number;
+  id: string;
+  contratistaId: string;
   nombreCompleto: string;
   dni: string;
   rol: string;
 }
 
 export interface Transporte {
-  id: number;
-  contratistaId: number;
+  id: string;
+  contratistaId: string;
   patente: string;
   tipo: string;
   capacidad: string;
 }
 
 export interface Maquinaria {
-  id: number;
-  contratistaId: number;
+  id: string;
+  contratistaId: string;
   equipo: string;
   modelo: string;
   horasUso: number;
+}
+
+export interface Database {
+  contratos: Contrato[];
+  contratistas: Contratista[];
+  personal: Personal[];
+  transporte: Transporte[];
+  maquinaria: Maquinaria[];
 }

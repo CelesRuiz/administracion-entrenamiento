@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DataService } from '../../../core/services/data.service';
 import { Transporte, Contratista } from '../../../core/models/entidades';
+import { ItemBase } from '../../../shared/models/item-base';
 
 @Component({
   selector: 'app-transporte-list',
@@ -53,7 +54,7 @@ export class TransporteListComponent implements OnInit {
   private dataService = inject(DataService);
   
   transportes: Transporte[] = [];
-  contratistas: Contratista[] = [];
+  contratistas: ItemBase[] = [];
 
   ngOnInit() {
     this.cargarDatos();
@@ -61,15 +62,15 @@ export class TransporteListComponent implements OnInit {
 
   cargarDatos() {
     this.dataService.getAll<Transporte>('transporte').subscribe(data => this.transportes = data);
-    this.dataService.getAll<Contratista>('contratistas').subscribe(data => this.contratistas = data);
+    this.dataService.getAll<ItemBase>('contratistas').subscribe(data => this.contratistas = data);
   }
 
-  getContratistaNombre(id: number): string {
-    const c = this.contratistas.find(x => x.id === id);
+  getContratistaNombre(id: string): string {
+    const c = this.contratistas.find(x => x.id == id);
     return c ? c.nombre : 'Desconocido';
   }
 
-  eliminar(id: number) {
+  eliminar(id: string) {
     if (confirm('Eliminar vehículo?')) {
       this.dataService.delete('transporte', id).subscribe(() => this.cargarDatos());
     }

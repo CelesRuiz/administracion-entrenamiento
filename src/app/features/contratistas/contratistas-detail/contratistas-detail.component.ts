@@ -18,8 +18,8 @@ import { Contratista } from '../../../core/models/entidades';
         <p><strong>CUIT:</strong> {{ contratista.cuit }}</p>
         <h4 style="margin-top: 1rem;">Contacto</h4>
         <ul>
-          <li><strong>Nombre:</strong> {{ contratista.contacto.nombre }}</li>
-          <li><strong>Tel:</strong> {{ contratista.contacto.telefono }}</li>
+          <li><strong>Nombre:</strong> {{ contratista.contactoNombre }}</li>
+          <li><strong>Tel:</strong> {{ contratista.contactoTelefono }}</li>
         </ul>
       </div>
 
@@ -37,7 +37,7 @@ export class ContratistasDetailComponent implements OnInit {
   contratista?: Contratista;
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id =(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.dataService.getById<Contratista>('contratistas', id).subscribe(data => {
         this.contratista = data;

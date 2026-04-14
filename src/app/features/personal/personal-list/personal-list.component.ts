@@ -2,7 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DataService } from '../../../core/services/data.service';
-import { Personal, Contratista } from '../../../core/models/entidades';
+import { Personal } from '../../../core/models/entidades';
+import { ItemBase } from '../../../shared/models/item-base';
 
 @Component({
   selector: 'app-personal-list',
@@ -53,7 +54,7 @@ export class PersonalListComponent implements OnInit {
   private dataService = inject(DataService);
   
   personalList: Personal[] = [];
-  contratistas: Contratista[] = [];
+  contratistas: ItemBase[] = [];
 
   ngOnInit() {
     this.cargarDatos();
@@ -61,15 +62,15 @@ export class PersonalListComponent implements OnInit {
 
   cargarDatos() {
     this.dataService.getAll<Personal>('personal').subscribe(data => this.personalList = data);
-    this.dataService.getAll<Contratista>('contratistas').subscribe(data => this.contratistas = data);
+    this.dataService.getAll<ItemBase>('contratistas').subscribe(data => this.contratistas = data);
   }
 
-  getContratistaNombre(id: number): string {
-    const c = this.contratistas.find(x => x.id === id);
+  getContratistaNombre(id: string): string {
+    const c = this.contratistas.find(x => x.id == id);
     return c ? c.nombre : 'Desconocido';
   }
 
-  eliminar(id: number) {
+  eliminar(id: string) {
     if (confirm('Eliminar personal?')) {
       this.dataService.delete('personal', id).subscribe(() => this.cargarDatos());
     }

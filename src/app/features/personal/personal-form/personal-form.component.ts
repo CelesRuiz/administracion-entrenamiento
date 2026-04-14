@@ -53,7 +53,7 @@ export class PersonalFormComponent implements OnInit {
 
   form: FormGroup;
   isEdit = false;
-  id: number | null = null;
+  id: string | null = null;
   contratistas: Contratista[] = [];
 
   constructor() {
@@ -69,7 +69,7 @@ export class PersonalFormComponent implements OnInit {
   ngOnInit() {
     this.dataService.getAll<Contratista>('contratistas').subscribe(c => this.contratistas = c);
 
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.id =(this.route.snapshot.paramMap.get('id'));
     if (this.id) {
       this.isEdit = true;
       this.dataService.getById<any>('personal', this.id).subscribe(data => {
@@ -82,7 +82,7 @@ export class PersonalFormComponent implements OnInit {
     if (this.form.invalid) return;
     
     // Parseamos a numero para evitar bugs con el === despues (aunque dejaremos otro bug)
-    const payload = { ...this.form.value, contratistaId: Number(this.form.value.contratistaId) };
+    const payload = { ...this.form.value, contratistaId:(this.form.value.contratistaId) };
 
     if (this.isEdit && this.id) {
       this.dataService.update('personal', this.id, payload).subscribe(() => {

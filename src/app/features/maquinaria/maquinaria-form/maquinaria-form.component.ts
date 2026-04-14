@@ -53,7 +53,7 @@ export class MaquinariaFormComponent implements OnInit {
 
   form: FormGroup;
   isEdit = false;
-  id: number | null = null;
+  id: string | null = null;
   contratistas: Contratista[] = [];
 
   constructor() {
@@ -68,7 +68,7 @@ export class MaquinariaFormComponent implements OnInit {
   ngOnInit() {
     this.dataService.getAll<Contratista>('contratistas').subscribe(c => this.contratistas = c);
 
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.id = (this.route.snapshot.paramMap.get('id'));
     if (this.id) {
       this.isEdit = true;
       this.dataService.getById<any>('maquinaria', this.id).subscribe(data => {

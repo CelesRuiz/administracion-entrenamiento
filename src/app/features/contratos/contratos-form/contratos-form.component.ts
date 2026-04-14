@@ -53,7 +53,7 @@ export class ContratosFormComponent implements OnInit {
 
   form: FormGroup;
   isEdit = false;
-  id: number | null = null;
+  id: string | null = null;
 
   constructor() {
     this.form = this.fb.group({
@@ -65,7 +65,7 @@ export class ContratosFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.id = (this.route.snapshot.paramMap.get('id'));
     if (this.id) {
       this.isEdit = true;
       this.dataService.getById<any>('contratos', this.id).subscribe(data => {
